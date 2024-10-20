@@ -71,7 +71,8 @@ class SoapLoggingInterceptorTest {
     soapLoggingInterceptor.afterCompletion(messageContext, methodEndpoint, null);
 
     verify(apiRequestLogService, times(1))
-        .logRequest("127.0.0.1", "Object.toString", xmlPayload, xmlPayload, anyLong());
+        .logRequest(eq("127.0.0.1"), eq("Object.toString"), eq(xmlPayload), eq(xmlPayload),
+            anyLong());
   }
 
   @Test
@@ -90,11 +91,10 @@ class SoapLoggingInterceptorTest {
     boolean result = soapLoggingInterceptor.handleRequest(messageContext, methodEndpoint);
 
     assertTrue(result);
-    verify(messageContext).setProperty("startTime", anyLong());
-    verify(messageContext).setProperty("ipOrigin", "127.0.0.1");
-    verify(messageContext).setProperty("method", "Object.toString");
+    verify(messageContext).setProperty(eq("startTime"), anyLong());
+    verify(messageContext).setProperty(eq("ipOrigin"), eq("127.0.0.1"));
+    verify(messageContext).setProperty(eq("method"), eq("Object.toString"));
   }
-
 
   @Test
   void handleResponse_ShouldReturnTrue() {
@@ -124,8 +124,9 @@ class SoapLoggingInterceptorTest {
     boolean result = soapLoggingInterceptor.handleRequest(messageContext, nonMethodEndpoint);
 
     assertTrue(result);
-    verify(messageContext).setProperty("startTime", anyLong());
-    verify(messageContext).setProperty("ipOrigin", "127.0.0.1");
-    verify(messageContext).setProperty("method", "Object");
+
+    verify(messageContext).setProperty(eq("startTime"), anyLong());
+    verify(messageContext).setProperty(eq("ipOrigin"), eq("127.0.0.1"));
+    verify(messageContext).setProperty(eq("method"), eq("Object"));
   }
 }
